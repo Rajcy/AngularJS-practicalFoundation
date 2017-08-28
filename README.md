@@ -1,0 +1,2 @@
+# AngularJS-practicalFoundation
+AngularJs的 MVC框架具体实现，Service机制与实现，双向数据绑定，UI-Router例子，directive指令详解，Route_Module_DependencyInjection
