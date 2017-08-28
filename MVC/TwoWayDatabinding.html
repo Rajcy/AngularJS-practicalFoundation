@@ -1,0 +1,16 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html ng-app>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <title>双向数据绑定</title>
+</head>
+<body>
+<input ng-model="greeting.text"/><!--MVC中的Model-->
+<p>{{greeting.text}},Angular</p><!--取值表达式-->
+
+<!--首页最好使用ng-bind进行绑定-->
+<p><span ng-bind="greeting.text"></span>, ng-bind 方式进行绑定</p>
+</body>
+<script src="../js/angular.min.js"></script>
+</html>

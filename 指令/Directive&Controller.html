@@ -1,0 +1,45 @@
+<!doctype html>
+<html ng-app="MyModule">
+	<head>
+        <title>指令的复用</title>
+		<meta charset="utf-8">
+	</head>
+	<body>
+    <h3>如何在Controller中使用指令</h3>
+        <!--howToLoad为指令中自定义的属性，通过属性，把如何加载数据的方法传递进来-->
+		<div ng-controller="MyCtrl">
+			<loader howToLoad="loadData()">滑动加载</loader>
+		</div>
+		<div ng-controller="MyCtrl2">
+			<loader howToLoad="loadData2()">滑动加载</loader>
+		</div>
+	</body>
+	<script src="../js/angular.min.js"></script>
+
+	<script>
+        var myModule = angular.module("MyModule", []);
+        myModule.controller('MyCtrl', ['$scope', function($scope){
+            $scope.loadData=function(){
+                console.log("加载数据中...");
+            }
+        }]);
+        myModule.controller('MyCtrl2', ['$scope', function($scope){
+            $scope.loadData2=function(){
+                console.log("加载数据中...22222");
+            }
+        }]);
+        myModule.directive("loader", function() {
+            return {
+                restrict:"AE",
+                link:function(scope,element,attrs){
+                    element.bind('mouseenter', function(event) {
+                        //scope.loadData();
+                        // scope.$apply("loadData()");
+                        // 注意这里的坑，howToLoad会被转换成小写的howtoload
+                        scope.$apply(attrs.howtoload);
+                    });
+                }
+            }
+        });
+    </script>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--ng-app相当于angularjs的管理边界-->
+<html lang="en" ng-app="todoList">
+<head>
+    <meta charset="UTF-8">
+    <title>TodoList</title>
+</head>
+<!--设定Controller的边界-->
+<body ng-controller="TaskCtrl">
+<div id="main">
+    <!--ngmodel 把输入的数据绑定到task变量中-->
+    <input ng-model="task" type="text" class="form-control">
+    <span class="input-group-btn">
+        <!--ngclick为点击事件-->
+        <button class="btn-default" ng-click="add()">提交</button>
+    </span>
+</div>
+    <!--当任务列表长度为0时隐藏该列表-->
+    <h4 ng-hide="tasks.length==0">任务列表</h4>
+    <h4 ng-if="tasks.length>1">任务列表长度>1时显示</h4>
+    <ul>
+        <li ng-repeat="item in tasks track by $index">{{item}}
+           <a ng-click="tasks.splice($index,1)">删除</a>
+            <!--ng-click="tasks.splice($index,1)为按照下标删除数组中数据的语法-->
+        </li>
+    </ul>
+
+</body>
+<script src="js/angular.min.js"></script>
+<!---angularjs 的声明,管理边界的声明ngapp，控制器的声明ngcontroller，点击事件的声明add()--->
+<script type="text/javascript">
+    angular.module('todoList',[])
+        .controller('TaskCtrl',function ($scope) {
+            $scope.task="";
+            $scope.tasks=[];
+            $scope.add=function () {
+                $scope.tasks.push($scope.task);
+            }
+        })
+</script>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="MyServiceApp">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="framework/bootstrap-3.0.0/css/bootstrap.css">
+    <script src="framework/angular-1.3.0.14/angular.js"></script>
+    <script src="MyService1.js"></script>
+    <title>MyService</title>
+</head>
+<body>
+<div ng-controller="ServiceController">
+    <label>用户名</label>
+    <input type="text" ng-model="username" placeholder="请输入用户名">
+    <pre ng-show="username">{{users}}</pre>
+</div>
+</body>
+<script>
+    var myServiceApp = angular.module("MyServiceApp", []);
+
+    //封装一个自己的Service
+    //用于返回一个对象，对象里有一个属性叫userList，是一个function，其内部还往上调用doRequest
+    myServiceApp.factory("userListService",
+        function ($http) {
+            var doRequest = function (username, path) {
+                return $http({
+                    method: 'GET',
+                    url: 'users.json'
+                });
+            }
+            return {
+                userList: function (username) {
+                    return doRequest(username, 'userList');
+                }
+            }
+        });
+
+    //自己定义的service注入时，要放在最后切不用$符号
+    //在controller内使用我们自定义的service
+    //$watch用于检测数据模型的变化，监听username
+    //检测是否拿到了新的username，拿到了，则向后台发起请求，调用service
+    //350为350毫秒，为了防止页面抖动，即用户延迟350毫秒不动时，才会发起请求
+    myServiceApp.controller("ServiceController",
+        function ($scope,$timeout,userListService) {
+           var timeout;
+           $scope.$watch('username',function (newUserName) {
+               if(newUserName){
+                   if (timeout){
+                       $timeout.cancel(timeout);
+                   }
+                   timeout = $timeout(function () {
+                       userListService.userList(newUserName)
+                           .success(function (data,status) {
+                               $scope.users = data;
+                           });
+                   },350);
+               }
+           })
+    })
+</script>
+</html>

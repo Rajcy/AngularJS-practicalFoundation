@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="MyCSSModule">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/CSS1.css">
+    <title>Css样式双向绑定</title>
+</head>
+<body>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <div class="panel-title">css样式双向绑定</div>
+    </div>
+    <div class="panel-body">
+        <div ng-controller="CSSCtrl">
+            <p class="text-{{color}}">测试css样式</p>
+            <button class="btn btn-default" ng-click="setGreen()">绿色</button>
+            <button class="btn btn-default" ng-click="setRed()">红色</button>
+        </div>
+    </div>
+</div>
+</body>
+<script src="../js/angular.min.js"></script>
+<script>
+    var myCSSModule = angular.module('MyCSSModule',[]);
+
+    myCSSModule.controller('CSSCtrl',function ($scope) {
+        $scope.color="red";
+        $scope.setGreen=function () {
+            $scope.color="green";
+        }
+        $scope.setRed=function () {
+            $scope.color="red";
+        }
+    })
+</script>
+</html>

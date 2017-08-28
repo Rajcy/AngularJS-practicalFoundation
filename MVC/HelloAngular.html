@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="HelloAngular">
+<!--ngapp相当于Java中的main方法-->
+<head>
+    <meta charset="UTF-8">
+    <title>MVC</title>
+</head>
+<body>
+<div ng-controller="AngularModel">
+    <p>{{greeting.text}}</p>
+</div>
+<br>
+<hello></hello> <!--AngularJS指令性-->
+</body>
+<script src="../js/angular.min.js"></script>
+<script type="text/javascript">
+    var myModule = angular.module("HelloAngular", []);
+
+    <!--AngularJS模块性 MVC中的Controller-->
+    myModule.controller("AngularModel", ['$scope',
+        function AngularModel($scope) {
+            $scope.greeting = {text: 'Hello Raj ,Im AngularJS'};
+        }
+    ]);
+
+    <!--AngularJS指令性 MVC中的VIEW-->
+    myModule.directive("hello", function () {
+        return {
+            restrict: 'E',
+            template: '<div>Hi Im learning AngularJS的指令性</div>',
+            replace: true
+        }
+    });
+</script>
+</html>

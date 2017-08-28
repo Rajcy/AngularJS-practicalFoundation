@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="userInfoModule">
+<head>
+    <meta charset="gb2312">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="../js/angular.min.js"></script>
+    <script src="js/form.js"></script>
+    <title>双向数据绑定</title>
+</head>
+<body>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <div class="panel-title">双向数据绑定</div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12">
+                <form role="form" class="form-horizontal" ng-controller="UserInfoCtrl">
+                    <div class="form-group">
+                        <lable class="col-md-2 control-lable">
+                            邮箱：
+                        </lable>
+                        <div class="col-md-10">
+                            <input type="email" class="form-control" placeholder="推荐使用163邮箱" ng-model="userInfo.email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <lable class="col-md-2 control-lable">
+                            密码：
+                        </lable>
+                        <div class="col-md-10">
+                            <input type="password" class="form-control" placeholder="只能是数字、字母、下划线" ng-model="userInfo.password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="checkbox">
+                                <lable>
+                                    <input type="checkbox" ng-model="userInfo.autoLogin">自动登录
+                                </lable>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button class="btn btn-default" ng-click="getFormData()">获取Form表单的值</button>
+                            <button class="btn btn-default" ng-click="setFormData()">设置Form表单的值</button>
+                            <button class="btn btn-default" ng-click="resetForm()">重置表单</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

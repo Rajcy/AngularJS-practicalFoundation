@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ScopeDemo">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <title>Scope作用域</title>
+</head>
+<body>
+<div>
+    <h4>$scope是一个POJO(Plain Old Javascript Object)</h4>
+    <h4>可以用angular.element($0).scope()进行调试</h4>
+    <hr>
+
+    <h4>此处根作用域是 Angular</h4>
+    <div ng-controller="GreetCtrl">
+        Hello {{name}}!
+    </div>
+    <br>
+    <div ng-controller="ListCtrl">
+        <ol>
+            <li ng-repeat="name in names">
+                {{name}} from {{department}}
+            </li>
+        </ol>
+    </div>
+</div>
+
+<hr>
+
+<!--作用域的(树形)向上向下传播-->
+<h4>$scope是一个树形结构，与DOM平行</h4>
+<h4>$scope可以传播事件，类似DOM事件，可以向上也可以向下</h4>
+<div ng-controller="EventCtrl">
+    Root scope根作用域
+    <tt>MyEvent</tt> count: {{count}}
+    <ul>
+        <li ng-repeat="i in [1]" ng-controller="EventCtrl">
+            <button ng-click="$emit('MyEvent')">
+                $emit('MyEvent'); 往上传递
+            </button>
+            <button ng-click="$broadcast('MyEvent')">
+                $broadcast('MyEvent'); 往下传递
+            </button>
+            <br>
+            Middle scope当前作用域
+            <tt>MyEvent</tt> count :{{count}}
+            <ul>
+                <li ng-repeat="item in [1,2]" ng-controller="EventCtrl">
+                    Leaf scope叶子作用域
+                    <tt>MyEvent</tt> count: {{count}}
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+<hr>
+<!--$scope继承方法-->
+<h4>子$scope对象会继承父$scope上的属性和方法</h4>
+<div ng-controller="ClickCtrl">
+    <button ng-click="test1()">test1</button>
+</div>
+</body>
+
+<script src="../js/angular.min.js"></script>
+<script type="text/javascript">
+    var myModule = angular.module('ScopeDemo', []);
+    //rootScope即根作用域，用于最顶层的作用于对象
+    myModule.controller("GreetCtrl", function ($scope, $rootScope) {
+        $scope.name = "World";
+        $rootScope.department = 'Angular';
+    });
+    myModule.controller("ListCtrl", function ($scope) {
+            $scope.names = ['Raj', 'Steven', 'Irving'];
+        }
+    );
+    ////////////////////////////////////////////////////////////////////////////
+    myModule.controller("EventCtrl", function ($scope) {
+        $scope.count = 0;
+        $scope.$on('MyEvent', function () {
+            $scope.count++;
+        })
+    });
+    /////////////////////////////////////////////////////////////////////////////
+    myModule.controller("ClickCtrl", function ($scope) {
+            $scope.test1=function () {
+                alert("test1");
+            }
+        }
+    );
+</script>
+</html>

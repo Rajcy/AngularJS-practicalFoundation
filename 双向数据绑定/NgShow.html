@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NgShow</title>
+</head>
+<body>
+ <div ng-app="MyCSSModule" ng-controller="MenuCtrl">
+     <button ng-click="toggleMenu()">Toggle Menu</button>
+     <ul ng-show="menuState.show">
+         <li>1232</li>
+         <li>22323</li>
+         <li>123</li>
+     </ul>
+ </div>
+</body>
+<script src="../js/angular.min.js"></script>
+<script>
+    var myCSSModule = angular.module('MyCSSModule', []);
+    myCSSModule.controller('MenuCtrl', function ($scope) {
+        $scope.menuState = {show: false};
+        $scope.toggleMenu = function () {
+          $scope.menuState.show = !$scope.menuState.show;
+        }
+
+    })
+</script>
+</html>

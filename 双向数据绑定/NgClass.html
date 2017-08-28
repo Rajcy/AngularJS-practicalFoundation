@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="MyCSSModule">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/NgClass.css">
+    <title>NgClass</title>
+</head>
+<body>
+<div ng-controller="HeaderCtrl">
+    <p>如果isError的值为true，则用error样式<br>如果isWarning的值为true，则用warning样式</p>
+    <div ng-class='{error:isError,warning:isWarning}'>{{messageText}}</div>
+    <button ng-click="showError()">Simulate Error</button>
+    <button ng-click="showWarning()">Simulate Warning</button>
+</div>
+</body>
+<script src="../js/angular.min.js"></script>
+<script>
+    var myCSSModule = angular.module('MyCSSModule', []);
+    myCSSModule.controller('HeaderCtrl', function ($scope) {
+        $scope.isError = false;
+        $scope.isWarning = false;
+        $scope.showError=function () {
+            $scope.messageText="This is an error";
+            $scope.isError=true;
+            $scope.isWarning=false;
+        };
+        $scope.showWarning=function () {
+            $scope.messageText="Just a  warning,Please carry on";
+            $scope.isError=false;
+            $scope.isWarning=true;
+        }
+    })
+</script>
+</html>

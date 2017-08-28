@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="HelloAngular">
+<!--ngapp相当于Java中的main方法-->
+<head>
+    <meta charset="UTF-8">
+    <title>指令</title>
+</head>
+<body>
+<!--AngularJS指令性-->
+
+   <!--A属性--><div hello></div>
+   <!--E元素--><hello></hello>
+      <!-- directive:hello -->
+   <!--M注释--><div></div>
+   <!--C样式类--><div class="hello"></div>
+
+    <!--templateCache--><hello2></hello2>
+
+    <!--transclude--><hello3>
+                      <div>
+                          此处为模板内部内容
+                      </div>
+                     </hello3>
+
+     <!--link--><hello4></hello4>
+
+
+     <!--compile--><div alotofhello="5" style='border:1px solid red;'>
+                     <p>hello compile!</p>
+                   </div>
+
+      <!--link,compile执行次数--><div ng-repeat="i in [1,2]">
+                                   <div repeater="2">
+                                       <p>
+                                           你好，再见
+                                       </p>
+                                   </div>
+                                 </div>
+</body>
+<script src="../js/angular.min.js"></script>
+<script type="text/javascript">
+    var myModule = angular.module("HelloAngular", []);
+
+    <!--AngularJS指令性 MVC中的VIEW-->
+    myModule.directive("hello", function () {
+        return {
+            restrict: 'AEMC',
+            template: '<div>Hello1 everyone！</div>',
+            replace: true
+        }
+    });
+    //restrict表示匹配模式 A—Attribute，E—Element，M—Command注释，C—Class
+
+    //////////////////////////////////////////////////////////////////////////////
+    //template表示模板 可使用 templateUrl: 'home.html'  来显示大量得html
+    //                也可使用templateCache，把想使用的HTML模板缓存起来，put与get的方式
+    //  myModule.run注射器加载完所有模块时，此方法执行一次
+    myModule.run(function($templateCache){
+        $templateCache.put("hello.html","<div>Hello2 everyone!!!!!!</div>");
+    });
+
+    myModule.directive("hello2", function($templateCache) {
+        return {
+            restrict: 'AECM',
+            template: $templateCache.get("hello.html"),
+            replace: true
+        }
+    });
+    //////////////////////////////////////////////////////////////////////////////
+    //replace与transclude用于模板内部嵌套
+    myModule.directive("hello3",function () {
+        return{
+            restrict:"AE",
+            transclude:true,
+            template:"<div style='border:1px solid red;'>Hello3 everyone!<div ng-transclude></div></div>"
+        }
+    })
+</script>
+
+<script>
+    //Link主要用于元素上绑定一些事件，或对scope进行一些绑定操作，或取属性
+    //在模型与视图之间建立关联，包括元素上注册事件监听
+    myModule.directive("hello4",function () {
+        return{
+            restrict:"E",
+            template:"<div>Hello4 everyone!</div>",
+            replace:true,
+            link:function (scope,el,attrs,controller) {
+                //console.log("<hello>....link...");
+                //绑定事件
+                el.on("mouseenter",function () {
+                    console.log("鼠标进入。。。");
+                })
+            }
+        }
+    });
+
+
+    //compile，用于对指令的模板进行转换
+    //scope只有在link阶段才会绑定到元素上，不能在compile内操作scope
+    myModule.directive("alotofhello",function () {
+        return{
+            restrict:"A",
+            compile:function (el,attrs,transclude) {
+                //从这里开始对标签元素自身进行一些变换
+                console.log("指令编译");
+                var tpl = el.children().clone();
+                console.log(tpl);
+                for (var i=1;i<attrs.alotofhello - 1;i++){
+                    el.append(tpl.clone());
+                }
+                return function (scope,el,attrs,controller) {
+                    console.log("此处为指令链接。。。link函数 ");
+                }
+            }
+        }
+    });
+
+    //对于同一个指令，compile只会执行一次，而link对于指令的每个实例都会执行一次
+    myModule.directive("repeater",function () {
+        return{
+            restrict:"A",
+            compile:function (el,attrs,transclude) {
+                //从这里开始对标签元素自身进行一些变换
+                console.log("repeat..compile..");
+
+                var tpl = el.children().clone();
+                for (var i =0; i<attrs.repeater-1; i++){
+                    el.append(tpl.clone());
+                }
+                //返回link函数
+                return function (scope,el,attrs,controller) {
+                    console.log("repeat...link");
+                }
+            }
+        }
+    })
+</script>
+</html>

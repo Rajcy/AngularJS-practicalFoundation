@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="MyModule">
+<head>
+    <meta charset="UTF-8">
+    <title>scope的绑定策略</title>
+</head>
+<body>
+<!--<h4>@ 用来绑定字符串，还可绑定来自外层的scope的值，在属性中插入{{}}即可</h4>-->
+<!--<h4>= 与父scope双向绑定</h4>-->
+<!--<h4>调用父scope中的函数</h4>-->
+
+
+<div ng-controller="MyCtrl">
+    <!--此处的flavor是调用了指令外部的scope的ctrlFlavor值-->
+    <p>@</p><drink flavor="{{ctrlFlavor}}"></drink>
+</div>
+<hr><!--------------------------------------------------------->
+<div ng-controller="MyCtrl2">
+    <p>=</p>
+     Ctrl:控制器内的Flavor<br/>
+     <input type="text" ng-model="ctrlFlavor"><br>
+     Directive: 指令内的Flavor<br>
+     <drink2 flavor="ctrlFlavor"></drink2>
+</div>
+<hr><!--------------------------------------------------------->
+<div ng-controller="MyCtrl3">
+    <p>&</p>
+    <greeting greet="sayHello(name)"></greeting>
+    <greeting greet="sayHello(name)"></greeting>
+    <greeting greet="sayHello(name)"></greeting>
+</div>
+</body>
+<script src="../js/angular.min.js"></script>
+<script>
+    //@At方法,省去link函数编写，传递的是字符串，而不是对象////////////////////////////////////////////////////////////////
+    var myModule = angular.module("MyModule",[]);
+    myModule.controller("MyCtrl",function ($scope) {
+        $scope.ctrlFlavor="百威";
+    });
+    myModule.directive("drink",function () {
+        return{
+            restrict:'AE',
+            scope:{flavor:'@'},
+            template:'<div>{{flavor}}</div>'
+//            ,link:function (scope,element,attrs) {
+//                scope.flavor=attrs.flavor;
+//            }
+        }
+    });
+</script>
+<script>
+    //=equal方法,指令内部的scope值与父scope值保持一致时使用/////////////////////////////////////////////////////
+    myModule.controller("MyCtrl2",function ($scope) {
+        $scope.ctrlFlavor="百威";
+    });
+    myModule.directive("drink2",function () {
+        return{
+            restrict:'AE',
+            scope:{flavor:'='},
+            template:'<input type="text" ng-model="flavor"/>'
+        }
+    });
+</script>
+<script>
+    //&and方法，使模板内的greet()方法，绑定父scope中的sayHello()方法/////////////////////////////////////////////////////////////////
+    //父scope中函数中有值为name，在指令中调用的语法如下
+    myModule.controller('MyCtrl3', ['$scope', function($scope){
+        $scope.sayHello=function(name){
+            alert("Hello "+name);
+        }
+    }]);
+    myModule.directive("greeting", function() {
+        return {
+            restrict:'AE',
+            scope:{
+                greet:'&'
+            },
+            template:'<input type="text" ng-model="userName" /><br/>'+
+            '<button class="btn btn-default" ng-click="greet({name:userName})">Greeting</button><br/>'
+        }
+    });
+</script>
+</html>
